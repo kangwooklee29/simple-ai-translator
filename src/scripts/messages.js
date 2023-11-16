@@ -1,4 +1,4 @@
-import { chatgpt_api } from "./common.js";
+import { chatgpt_api, language_dict } from "./common.js";
 
 export class Messages{
     constructor() {
@@ -6,8 +6,15 @@ export class Messages{
 
     async send_chatgpt(content) {
         console.log(localStorage.getItem("target_language"), content);
-        await chatgpt_api([
+        const target_language = localStorage.getItem("target_language");
+        const prompt = [
             {role:"user", content:""}, 
-            {role: "user", content: `Translate this text into ${localStorage.getItem("target_language")}: "${content}"`}]);
+            {role: "user", content: `Translate this text into ${language_dict[target_language].English}: "${content}"`}
+        ];
+
+        if (target_language !== "English")
+            prompt.push({role: "user", content: "Please write the pronunciation of the translated result in English alphabet after writing it."});
+
+        await chatgpt_api(prompt);
     }
 }

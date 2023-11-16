@@ -76,9 +76,17 @@ div.title {
 }
 
 div.api_status {
-    border: 1px solid #ddd;
     width: 200px;
     height: 20px;
+}
+
+div.lang_select {
+    flex-direction: row;
+}
+
+div.lang_select img {
+    width: 20px;
+    margin: 10px;
 }
 
 div.answer_wrapper {
