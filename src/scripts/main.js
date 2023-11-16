@@ -3,8 +3,7 @@ import {whisper_api, answer_stream, messages} from './common.js';
 let mediaRecorder = null, chunks = [];
 
 async function start_recording() {
-    console.log(mediaRecorder);
-    if (!mediaRecorder || mediaRecorder.state === "recording") return;
+    if (mediaRecorder && mediaRecorder.state === "recording") return;
 
     document.querySelector("div.api_status").innerHTML = "Recording...";
 
