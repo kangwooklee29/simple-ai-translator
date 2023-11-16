@@ -41,19 +41,13 @@ div.record_button > button{
     user-select: none;
 }
 
-div.record_script {
-    height: 100px;
-    width: 90%;
-    overflow-y: auto;
-}
-
 div.API_KEY {
     margin-top: 100px;
 }
 
 textarea {
-    width: 80%;
-    height: 80px;
+    width: 90%;
+    height: 100px;
 }
 
 .hide{
@@ -104,6 +98,7 @@ div.answer {
 div.result_buttons {
     position: relative;
     width: 90%;
+    height: 30px;
 }
 
 div.result_buttons button {
@@ -116,4 +111,8 @@ div.result_buttons button {
 
 #gpt4 {
     right: 0px;
+}
+
+#gpt3_5 {
+    right: 60px;
 }

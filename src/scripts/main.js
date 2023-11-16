@@ -34,7 +34,7 @@ async function start_recording() {
         if (new Date().getTime() - time_before_whisper_api < 8000) {
             if (result.text) {
                 document.querySelector("div.api_status").innerHTML = ``;
-                document.querySelector("div.record_script").innerHTML = result.text;
+                document.querySelector("textarea.record_script").innerHTML = result.text;
                 messages.send_chatgpt(result.text);
             }
             else
@@ -71,8 +71,11 @@ document.querySelector("div.result_buttons").addEventListener("click", e => {
     if (e.target.id === "tts") 
         run_tts();
 
+    if (e.target.id === "gpt3_5")
+        messages.send_chatgpt(document.querySelector("textarea.record_script").innerHTML, "gpt-3.5-turbo");
+
     if (e.target.id === "gpt4")
-        messages.send_chatgpt(document.querySelector("div.record_script").innerHTML, "gpt-4");
+        messages.send_chatgpt(document.querySelector("textarea.record_script").innerHTML, "gpt-4");
 });
 
 document.querySelector("#source_language").addEventListener("change", e => localStorage.setItem("source_language", e.target.value));
