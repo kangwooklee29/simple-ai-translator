@@ -9,8 +9,15 @@
   <body>
     <main>
       <div class="title"><button onclick="window.open('options.html')">options</button></div>
-      <div class="source_language"><lable for="source_language">Source language</lable><input type="text" id="source_language"></div>
-      <div class="target_language"><lable for="target_language">Target language</lable><input type="text" id="target_language"></div>
+      <div class="source_language">
+        <select id="source_language">
+          <option value="auto">Auto</option>
+        </select>
+      </div>
+      <div class="target_language">
+        <select id="target_language">
+        </select>
+      </div>
       <div class="api_status"></div>
       <div class="record_button">
         <button>Keep pushing to record</button>

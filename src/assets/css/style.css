@@ -77,17 +77,18 @@ div.title {
 
 div.api_status {
     border: 1px solid #ddd;
-    width: 100px;
+    width: 200px;
     height: 20px;
 }
 
 div.answer_wrapper {
     width: 90%;
-    overflow-y: auto;
     align-items: flex-end;
     background-color: #eee;
+    min-height: 100px;
 }
 
 div.answer {
     width: 100%;
+    height: 100%;
 }
