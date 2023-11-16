@@ -3,7 +3,6 @@ export class AnswerStream {
         this.now_streaming = false;
         this.now_answer = "";
         this.answer_set = "";
-        this.signal = false;
     }
     
     start() {
@@ -11,7 +10,6 @@ export class AnswerStream {
             this.answer_set = "";
             this.now_answer = "";
             this.now_streaming = true;
-            this.signal = false;
         }
     }
     
@@ -22,7 +20,6 @@ export class AnswerStream {
     }
     
     end() {
-        this.signal = false;
         this.now_streaming = false;
     }
 }

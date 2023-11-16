@@ -2,13 +2,17 @@ import {whisper_api, answer_stream, messages, language_dict} from './common.js';
 
 let mediaRecorder = null, chunks = [];
 
+function run_tts() {
+    if (!window.getSelection) return;
+    console.log(window.getSelection().toString());
+}
+
 async function start_recording() {
     if (mediaRecorder && mediaRecorder.state === "recording") return;
 
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
     document.querySelector("div.api_status").innerHTML = "Recording...";
-    answer_stream.signal = true;
 
     mediaRecorder = new MediaRecorder(stream, {type: 'audio/webm'});
     mediaRecorder.ondataavailable = e => chunks.push(e.data);
@@ -31,7 +35,6 @@ async function start_recording() {
             if (result.text) {
                 document.querySelector("div.api_status").innerHTML = ``;
                 document.querySelector("div.record_script").innerHTML = result.text;
-                answer_stream.signal = false;
                 messages.send_chatgpt(result.text);
             }
             else
@@ -62,6 +65,14 @@ document.querySelector("div.lang_select img").addEventListener("click", () => {
 
     localStorage.setItem("source_language", prev_target);
     localStorage.setItem("target_language", prev_source);
+});
+
+document.querySelector("div.result_buttons").addEventListener("click", e => {
+    if (e.target.id === "tts") 
+        run_tts();
+
+    if (e.target.id === "gpt4")
+        messages.send_chatgpt(document.querySelector("div.record_script").innerHTML, "gpt-4");
 });
 
 document.querySelector("#source_language").addEventListener("change", e => localStorage.setItem("source_language", e.target.value));
