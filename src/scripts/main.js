@@ -3,25 +3,33 @@ import {whisper_api, messages, language_dict} from './common.js';
 let mediaRecorder = null, chunks = [];
 
 async function run_tts() {
-    if (!window.getSelection) {
+    const selection = window.getSelection();
+    if (!selection) {
         alert("Select text to play.");
         return;
     }
 
-    const response = await fetch('https://api.openai.com/v1/audio/speech', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem("API_KEY")}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            model: 'tts-1',
-            input: window.getSelection().toString(),
-            voice: 'alloy'
-        })
-    });
+    const selection_str = selection.toString();
+    let blob_url = localStorage.getItem(selection_str);
+    if (!blob_url) {
+        const response = await fetch('https://api.openai.com/v1/audio/speech', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("API_KEY")}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: 'tts-1',
+                input: selection_str,
+                voice: 'alloy'
+            })
+        });
 
-    const audio = new Audio(URL.createObjectURL(await response.blob()));
+        blob_url = URL.createObjectURL(await response.blob());
+        localStorage.setItem(selection_str, blob_url);
+    }
+
+    const audio = new Audio(blob_url);
     audio.play();
 }
 
@@ -78,6 +86,7 @@ document.querySelector("div.record_button > button").addEventListener("mouseup",
 document.querySelector("div.lang_select img").addEventListener("click", () => {
     const prev_source = document.querySelector("#source_language").value;
     const prev_target = document.querySelector("#target_language").value;
+    if (prev_source === "auto") return;
     document.querySelector("#source_language").value = prev_target;
     document.querySelector("#target_language").value = prev_source;
 
@@ -94,6 +103,20 @@ document.querySelector("div.result_buttons").addEventListener("click", e => {
 
     if (e.target.id === "gpt4")
         messages.send_chatgpt(document.querySelector("textarea.record_script").value, "gpt-4");
+});
+
+document.querySelector("div.title button").addEventListener("click", () => {
+    document.querySelector("#options").style.display = 'block';
+});
+
+document.querySelector("#options").addEventListener("click", e => {
+    if (e.target === document.querySelector("div.API_KEY button"))
+        localStorage.setItem("API_KEY", document.querySelector("#api_key").value);
+
+    if (e.target.classList.contains("options-close")) {
+        if (localStorage.getItem("API_KEY"))
+            document.querySelector("#options").style.display = 'none';
+    }
 });
 
 document.querySelector("#source_language").addEventListener("change", e => localStorage.setItem("source_language", e.target.value));
@@ -122,4 +145,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelector("#source_language").value = source_language ? source_language : "auto";
     document.querySelector("#target_language").value = target_language ? target_language : "en";
+
+    const API_KEY = localStorage.getItem("API_KEY");
+    if (API_KEY)
+        document.querySelector("div.API_KEY input").value = API_KEY;
+    else
+        document.querySelector("#options").style.display = 'block';
 });

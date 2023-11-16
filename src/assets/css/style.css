@@ -1,4 +1,4 @@
-body, main, div {
+body, main, div, h1 {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -18,6 +18,7 @@ main {
     height: 100%;
     flex-direction: column;
     position: relative;
+    justify-content: flex-start;
 }
 
 @media (min-width: 600px) {
@@ -39,6 +40,17 @@ div.record_button > button{
     background-size : cover;
     border: 0px;
     user-select: none;
+}
+
+#tts {
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 0 1px 6px #20212447;
+    border: 0px;
+}
+
+#tts img {
+    width: 20px;
 }
 
 div.API_KEY {
@@ -71,17 +83,23 @@ div.title {
 }
 
 div.api_status {
-    width: 200px;
+    width: 250px;
     height: 20px;
 }
 
 div.lang_select {
     flex-direction: row;
+    width: 90%;
 }
 
 div.lang_select img {
     width: 20px;
     margin: 10px;
+}
+
+div.lang_select select {
+    width: 150px;
+    text-align: center;
 }
 
 div.answer_wrapper {
@@ -94,6 +112,8 @@ div.answer_wrapper {
 div.answer {
     width: 100%;
     height: 100%;
+    box-sizing: border-box;
+    padding: 5px;
 }
 
 div.result_buttons {
@@ -116,4 +136,53 @@ div.result_buttons button {
 
 #gpt3_5 {
     right: 60px;
+}
+
+h1 {
+    height: 100px;
+    padding: 5px;
+}
+
+#options {
+    border: 1px solid black;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 1000;
+    background-color: #fff;
+    flex-direction: column;
+    justify-content: flex-start;
+    display: none;
+}
+
+#options label {
+    width: 30%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    padding: 5px;
+}
+
+#options item {
+    width: 70%;
+    display: flex;
+}
+
+#options item > div:first-child {
+    width: 80%;
+}
+
+#options input{
+    width: 80%;
+}
+
+#options button{
+    margin: 5px;
+    width: 50px;
+}
+
+#options .options-close {
+    position: absolute;
+    top: 10px;
+    left: 10px;
 }

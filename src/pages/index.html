@@ -8,7 +8,7 @@
   </head>
   <body>
     <main>
-      <div class="title"><button onclick="window.open('options.html')">options</button></div>
+      <div class="title"><button>options</button></div>
       <div class="lang_select">
         <select id="source_language">
           <option value="auto">Auto</option>
@@ -17,16 +17,27 @@
         <select id="target_language">
         </select>
       </div>
-      <div class="api_status"></div>
       <div class="record_button">
         <button>Keep pushing to record</button>
       </div>
+      <div class="api_status"></div>
       <textarea class="record_script"></textarea>
       <div class="answer_wrapper"><div class="answer"></div></div>
       <div class="result_buttons">
-        <button id="tts">TTS</button>
+        <button id="tts"><img src="../assets/img/Speaker_Icon.svg"></button>
         <button id="gpt3_5">GPT-3.5</button>
         <button id="gpt4">GPT-4</button>
+      </div>
+      <div id="options">
+        <h1>Simple AI Translator Options</h1>
+        <div class="API_KEY">
+          <label for="api_key">OpenAI API key</label>
+          <item>
+              <div><input type="text" id="api_key"></div>
+              <div><button>SAVE</button></div>
+          </item>
+        </div>
+        <div class="options-close">x</div>
       </div>
     </main>
   <script src="../scripts/main.js" type="module"></script>
