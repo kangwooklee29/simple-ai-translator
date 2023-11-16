@@ -5,12 +5,11 @@ let mediaRecorder = null, chunks = [];
 async function start_recording() {
     if (mediaRecorder && mediaRecorder.state === "recording") return;
 
-    document.querySelector("div.api_status").innerHTML = "Recording...";
-
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
+    document.querySelector("div.api_status").innerHTML = "Recording...";
     answer_stream.signal = true;
-      
+
     mediaRecorder = new MediaRecorder(stream, {type: 'audio/webm'});
     mediaRecorder.ondataavailable = e => chunks.push(e.data);
   
@@ -20,7 +19,7 @@ async function start_recording() {
         chunks = [];
         mediaRecorder = null;
         stream.getTracks().forEach(track => track.stop());
-      
+
         document.querySelector("div.api_status").innerHTML = `Waiting for response...`;
         var time_before_whisper_api = new Date().getTime();
         setTimeout(() => {
@@ -37,7 +36,7 @@ async function start_recording() {
             }
             else
                 document.querySelector("div.api_status").innerHTML = `No messages. Check mic setup.`;
-       }
+        }
     };
 
     mediaRecorder.start();
