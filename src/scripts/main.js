@@ -12,7 +12,7 @@ async function start_recording() {
 
     mediaRecorder = new MediaRecorder(stream, {type: 'audio/webm'});
     mediaRecorder.ondataavailable = e => chunks.push(e.data);
-  
+
     mediaRecorder.onstop = async () => {
         var blob = new Blob(chunks, { 'type' : 'audio/webm' });
         var file = new File([blob], "audio.webm", { type: "audio/webm;" });
