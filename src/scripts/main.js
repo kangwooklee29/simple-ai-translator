@@ -56,8 +56,11 @@ document.querySelector("div.record_button > button").addEventListener("mouseup",
 });
 
 document.querySelector("#target_language").addEventListener("input", e => localStorage.setItem("target_language", e.target.value));
+document.querySelector("#source_language").addEventListener("input", e => localStorage.setItem("source_language", e.target.value));
 
 document.addEventListener("DOMContentLoaded", () => {
     const target_language = localStorage.getItem("target_language");
+    const source_language = localStorage.getItem("source_language");
     document.querySelector("#target_language").value = target_language ? target_language : "English";
+    document.querySelector("#source_language").value = source_language ? source_language : "Korean";
 });
