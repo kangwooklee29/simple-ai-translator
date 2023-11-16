@@ -1,0 +1,107 @@
+body, main, div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body {
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+main {
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    position: relative;
+}
+
+@media (min-width: 600px) {
+    main{
+        height: 85%;
+        width: 600px;
+    }
+}
+
+div.button{
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+}
+
+div.record_button > button{
+    width: 200px;
+    height: 200px;
+    background-size : cover;
+    border: 0px;
+}
+
+div.API_KEY {
+    margin-top: 100px;
+}
+
+textarea {
+    width: 80%;
+    height: 80px;
+}
+
+.hide{
+    display:none;
+}
+
+div.title > button {
+    background-color: #fafafa;
+    border: 0px;
+    color: #333;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+div.title {
+    height: 20px;
+    position: relative;
+    width: 100%;
+}
+
+div.api_status {
+    border: 1px solid #ddd;
+}
+
+div.answer_wrapper {
+    width: 100%;
+    overflow-y: auto;
+    align-items: flex-end;
+}
+
+div.answer {
+    height: fit-content;
+    width: 100%;
+    flex-direction: column;
+    height: 100px;
+    position: relative;
+}
+
+/* div.answer 안에 들어가는 엘리먼트들은 오렌지색 버블 모양 메시지 앱 */ 
+
+div.answer > div {
+    border-radius: 10px;
+}
+
+div.answer > div.answer_ai {
+    justify-content: left;
+    background-color: #aaa;
+    color: black;
+    border: 1px solid #ddd;
+}
+
+div.answer > div.answer_user {
+    justify-content: right;
+    background-color: orange;
+    border: 1px solid orange;
+    color: white;
+}
