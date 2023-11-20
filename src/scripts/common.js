@@ -85,12 +85,16 @@ async function whisper_api(file) {
 }
 
 async function chatgpt_api(messages, model) {
+    document.querySelector("#gpt3_5").disabled = true;
+    document.querySelector("#gpt4").disabled = true;
+
     const api_url = "https://api.openai.com/v1/chat/completions";
     const param = {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("API_KEY")}`
+            "Authorization": `Bearer ${localStorage.getItem("API_KEY")}`,
+            "type": "json_object"
         },
         body: JSON.stringify({model: model, messages: messages, stream: true})
     };
@@ -106,6 +110,8 @@ async function chatgpt_api(messages, model) {
             buffer = messages.pop();
             if (messages.length === 0) {
                 answer_stream.end();
+                document.querySelector("#gpt3_5").disabled = false;
+                document.querySelector("#gpt4").disabled = false;
                 return answer_stream.now_answer;
             }
 
@@ -113,6 +119,7 @@ async function chatgpt_api(messages, model) {
                if (message.includes("data: ") && message.includes("[DONE]") === false) {
                    answer_stream.start();
                    const val = JSON.parse(message.replace("data: ", ""));
+                   console.log(val);
                    if (val.choices[0].delta.content)
                        await answer_stream.add_answer(val.choices[0].delta.content);
                }

@@ -12,7 +12,7 @@ export class Messages{
         ];
 
         if (target_language !== "en")
-            prompt.push({role: "user", content: "Please write the pronunciation of the translated result in English alphabet after writing it."});
+            prompt.push({role: "user", content: "Please write a JSON message that has the 'result' attribute and the 'pronunciation' attribute(the pronunciation of the translated result in English alphabet)."});
 
         await chatgpt_api(prompt, model);
     }

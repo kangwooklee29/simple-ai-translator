@@ -4,6 +4,10 @@ body, main, div, h1 {
     align-items: center;
 }
 
+body * {
+    color: #777;
+}
+
 body {
     justify-content: center;
     align-items: center;
@@ -36,7 +40,7 @@ div.button{
 
 div.record_button {
     position: fixed;
-    bottom: 0;
+    bottom: 50px;
     width: 100%;
 }
 
@@ -46,31 +50,27 @@ div.record_button > button{
     background-size : cover;
     border: 0px;
     user-select: none;
-    border-radius: 5px;
+    border-radius: 15px;
     box-shadow: 0px 1px 6px #20212447;
     background-color: #fff;
 }
 
-button.pushing {
+div.record_button > button.pushing {
     box-shadow: 0px 1px 3px #20212447;
     background-color: #eee;
 }
 
 #tts {
+    position: absolute;
+    left: 20px;
     border-radius: 50%;
-    background-color: white;
-    box-shadow: 0 1px 6px #20212447;
-    border: 0px;
-    height: 32px;
-}
-
-#tts:disabled {
-    background-color: #eee;
-    box-shadow: 0 1px 3px #20212447;
+    height: 26px;
 }
 
 #tts img {
-    width: 20px;
+    top: 1px;
+    width: 14px;
+    position: relative;
 }
 
 div.API_KEY {
@@ -79,8 +79,18 @@ div.API_KEY {
 
 textarea {
     width: 90%;
-    height: 100px;
+    height: 150px;
+    font-size: 13pt;
     box-sizing: border-box;
+    resize: none;
+    padding: 15px;
+    border: 1px solid rgba(0,0,0,.12);
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+textarea:focus {
+    outline: none;
 }
 
 .hide{
@@ -124,38 +134,37 @@ div.lang_select select {
 
 div.answer_wrapper {
     width: 90%;
-    align-items: flex-end;
-    background-color: #eee;
-    min-height: 100px;
+    background-color: #f5f5f5;
+    flex-direction: column;
+    border-radius: 15px;
 }
 
 div.answer {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    padding: 5px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 15px;
+    min-height: 100px;
 }
 
 div.result_buttons {
     position: relative;
-    width: 90%;
-    height: 30px;
+    width: 100%;
+    height: 60px;
 }
 
 div.result_buttons button {
-    position: absolute;
+    background-color: #f5f5f5;
+    box-shadow: 0 1px 6px #20212447;
+    border: 0px;
+    border-radius: 5px;
 }
 
-#tts {
-    left: 0px;
-}
-
-#gpt4 {
-    right: 0px;
-}
-
-#gpt3_5 {
-    right: 60px;
+div.result_buttons button:disabled {
+    background-color: #ddd;
+    box-shadow: 0 1px 3px #20212447;
 }
 
 h1 {
@@ -205,4 +214,14 @@ h1 {
     position: absolute;
     top: 10px;
     left: 10px;
+}
+
+div.regenerate-buttons {
+    justify-content: flex-end;
+    position: absolute;
+    right: 20px;
+}
+
+div.regenerate-buttons * {
+    margin: 5px;
 }

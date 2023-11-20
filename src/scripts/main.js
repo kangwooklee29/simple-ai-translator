@@ -112,10 +112,10 @@ document.querySelector("div.result_buttons").addEventListener("click", e => {
     }
 
     if (e.target.id === "gpt3_5")
-        messages.send_chatgpt(document.querySelector("textarea.record_script").value, "gpt-3.5-turbo");
+        messages.send_chatgpt(document.querySelector("textarea.record_script").value, "gpt-3.5-turbo-1106");
 
     if (e.target.id === "gpt4")
-        messages.send_chatgpt(document.querySelector("textarea.record_script").value, "gpt-4");
+        messages.send_chatgpt(document.querySelector("textarea.record_script").value, "gpt-4-1106-preview");
 });
 
 document.querySelector("div.title button").addEventListener("click", () => {
