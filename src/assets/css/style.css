@@ -47,6 +47,12 @@ div.record_button > button{
     background-color: white;
     box-shadow: 0 1px 6px #20212447;
     border: 0px;
+    height: 32px;
+}
+
+#tts:disabled {
+    background-color: #eee;
+    box-shadow: 0 1px 3px #20212447;
 }
 
 #tts img {

@@ -4,13 +4,14 @@ let mediaRecorder = null, chunks = [];
 
 async function run_tts() {
     const selection = window.getSelection();
-    if (!selection) {
-        alert("Select text to play.");
-        return;
+    let target_text = document.querySelector("div.answer").textContent;
+    if (selection) {
+        const selection_str = selection.toString();
+        if (selection_str && target_text.includes(selection_str))
+            target_text = selection_str;
     }
 
-    const selection_str = selection.toString();
-    let blob_url = localStorage.getItem(selection_str);
+    let blob_url = localStorage.getItem(target_text);
     if (!blob_url) {
         const response = await fetch('https://api.openai.com/v1/audio/speech', {
             method: 'POST',
@@ -20,17 +21,20 @@ async function run_tts() {
             },
             body: JSON.stringify({
                 model: 'tts-1',
-                input: selection_str,
+                input: target_text,
                 voice: 'alloy'
             })
         });
 
         blob_url = URL.createObjectURL(await response.blob());
-        localStorage.setItem(selection_str, blob_url);
+        localStorage.setItem(target_text, blob_url);
     }
 
     const audio = new Audio(blob_url);
     audio.play();
+    audio.addEventListener('ended', () => {
+        document.querySelector("#tts").disabled = false;
+    });    
 }
 
 async function start_recording() {
@@ -95,8 +99,10 @@ document.querySelector("div.lang_select img").addEventListener("click", () => {
 });
 
 document.querySelector("div.result_buttons").addEventListener("click", e => {
-    if (e.target.id === "tts") 
+    if (document.querySelector("#tts").contains(e.target) && !document.querySelector("#tts").disabled) {
+        document.querySelector("#tts").disabled = true;
         run_tts();
+    }
 
     if (e.target.id === "gpt3_5")
         messages.send_chatgpt(document.querySelector("textarea.record_script").value, "gpt-3.5-turbo");
