@@ -39,6 +39,7 @@ async function run_tts() {
 
 async function start_recording() {
     if (mediaRecorder && mediaRecorder.state === "recording") return;
+    document.querySelector("div.record_button button").classList.add("pushing");
 
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
@@ -78,13 +79,19 @@ async function start_recording() {
 document.querySelector("div.record_button > button").addEventListener("touchstart", () => start_recording());
 
 document.querySelector("div.record_button > button").addEventListener("touchend", () => {
-    if (mediaRecorder) mediaRecorder.stop();
+    if (mediaRecorder) {
+        document.querySelector("div.record_button button").classList.remove("pushing");
+        mediaRecorder.stop();
+    }
 });
 
 document.querySelector("div.record_button > button").addEventListener("mousedown", () => start_recording());
 
 document.querySelector("div.record_button > button").addEventListener("mouseup", () => {
-    if (mediaRecorder) mediaRecorder.stop();
+    if (mediaRecorder) {
+        document.querySelector("div.record_button button").classList.remove("pushing");
+        mediaRecorder.stop();
+    }
 });
 
 document.querySelector("div.lang_select img").addEventListener("click", () => {
