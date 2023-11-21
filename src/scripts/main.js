@@ -4,7 +4,7 @@ let mediaRecorder = null, chunks = [];
 
 async function run_tts() {
     const selection = window.getSelection();
-    let target_text = document.querySelector("div.answer").textContent;
+    let target_text = document.querySelector("#translate_result").textContent;
     if (selection) {
         const selection_str = selection.toString();
         if (selection_str && target_text.includes(selection_str))
@@ -78,7 +78,7 @@ async function start_recording() {
 
 document.querySelector("div.record_button > button").addEventListener("touchstart", () => start_recording());
 
-document.querySelector("div.record_button > button").addEventListener("touchend", () => {
+document.body.addEventListener("touchend", () => {
     if (mediaRecorder) {
         document.querySelector("div.record_button button").classList.remove("pushing");
         mediaRecorder.stop();
@@ -87,7 +87,7 @@ document.querySelector("div.record_button > button").addEventListener("touchend"
 
 document.querySelector("div.record_button > button").addEventListener("mousedown", () => start_recording());
 
-document.querySelector("div.record_button > button").addEventListener("mouseup", () => {
+document.body.addEventListener("mouseup", () => {
     if (mediaRecorder) {
         document.querySelector("div.record_button button").classList.remove("pushing");
         mediaRecorder.stop();
@@ -103,6 +103,10 @@ document.querySelector("div.lang_select img").addEventListener("click", () => {
 
     localStorage.setItem("source_language", prev_target);
     localStorage.setItem("target_language", prev_source);
+
+    document.querySelector("textarea.record-script").value = document.querySelector("#translate_result").textContent;
+    document.querySelector("#translate_result").innerHTML = '';
+    document.querySelector("#pronunciation").innerHTML = '';
 });
 
 document.querySelector("div.result_buttons").addEventListener("click", e => {

@@ -133,6 +133,17 @@ div.lang_select select {
     text-align: center;
 }
 
+div.model-selection-wrapper {
+    width: 90%;
+    justify-content: flex-start;
+}
+
+#default_model {
+    width: 80px;
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
+
 div.answer_wrapper {
     width: 90%;
     background-color: #f5f5f5;
@@ -148,6 +159,8 @@ div.answer {
     align-items: flex-start;
     padding: 15px;
     min-height: 100px;
+    line-height: 1.5;
+    display: inline;
 }
 
 div.result_buttons {
@@ -226,4 +239,13 @@ div.regenerate-buttons {
 
 div.regenerate-buttons * {
     margin: 5px;
+}
+
+#translate_result {
+    font-size: 13pt;
+}
+
+#pronunciation {
+    color: #999;
+    margin-left: 8px;
 }

@@ -119,7 +119,6 @@ async function chatgpt_api(messages, model) {
                if (message.includes("data: ") && message.includes("[DONE]") === false) {
                    answer_stream.start();
                    const val = JSON.parse(message.replace("data: ", ""));
-                   console.log(val);
                    if (val.choices[0].delta.content)
                        await answer_stream.add_answer(val.choices[0].delta.content);
                }
