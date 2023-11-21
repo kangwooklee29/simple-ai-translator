@@ -4,7 +4,7 @@ export class Messages{
     constructor() {
     }
 
-    async send_chatgpt(content, model="gpt-3.5-turbo") {
+    async send_chatgpt(content, model) {
         const target_language = document.querySelector("#target_language").value;
         const prompt = [
             {role: "user", content: ""}, 

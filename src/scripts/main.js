@@ -66,7 +66,7 @@ async function start_recording() {
             if (result.text) {
                 document.querySelector("div.api_status").innerHTML = ``;
                 document.querySelector("textarea.record_script").value = result.text;
-                messages.send_chatgpt(result.text);
+                messages.send_chatgpt(result.text, document.querySelector("#default_model").value);
             }
             else
                 document.querySelector("div.api_status").innerHTML = `No messages. Check mic setup.`;
@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const target_option = document.createElement('option');
 
         source_option.value = key;
-        source_option.text = value.Native;
+        source_option.text = `${value.Native} (${value.English})`;
 
         target_option.value = key;
         target_option.text = `${value.Native} (${value.English})`;
