@@ -16,6 +16,7 @@ export class AnswerStream {
             this.mode_history = new Set();
             this.current_mode = "";
             this.now_streaming = true;
+            document.querySelector("div.api_status").innerHTML = `Generating...`;
         }
     }
 
@@ -26,7 +27,6 @@ export class AnswerStream {
 
     async add_answer(answer_generated) {
         this.now_answer += answer_generated;
-        console.log(answer_generated);
         const val_result = this.findPropertyValue(this.now_answer + `"`, "result");
         document.querySelector(`#translate_result`).innerText = val_result;
         const val_pronun = this.findPropertyValue(this.now_answer + `"`, "pronunciation");
@@ -35,5 +35,6 @@ export class AnswerStream {
     
     end() {
         this.now_streaming = false;
+        document.querySelector("div.api_status").innerHTML = ``;
     }
 }

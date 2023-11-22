@@ -39,9 +39,7 @@ div.button{
 }
 
 div.record_button {
-    position: fixed;
-    bottom: 50px;
-    width: 100%;
+    margin-top: 50px;
 }
 
 div.record_button > button{

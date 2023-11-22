@@ -1,6 +1,7 @@
 import {whisper_api, messages, language_dict} from './common.js';
 
 let mediaRecorder = null, chunks = [];
+let recordTimer = null, timerTime = 0;
 
 async function run_tts() {
     const selection = window.getSelection();
@@ -43,7 +44,10 @@ async function start_recording() {
 
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-    document.querySelector("div.api_status").innerHTML = "Recording...";
+    timerTime = Date.now();
+    recordTimer = setInterval(() => {
+        document.querySelector("div.api_status").innerHTML = `Recording... ${new Date(Date.now() - timerTime).toISOString().substr(14, 5)}`;
+    }, 1000);
 
     mediaRecorder = new MediaRecorder(stream, {type: 'audio/webm'});
     mediaRecorder.ondataavailable = e => chunks.push(e.data);
@@ -55,7 +59,10 @@ async function start_recording() {
         mediaRecorder = null;
         stream.getTracks().forEach(track => track.stop());
 
+        clearInterval(recordTimer);
         document.querySelector("div.api_status").innerHTML = `Waiting for response...`;
+        document.querySelector("#translate_result").innerHTML = '';
+        document.querySelector("#pronunciation").innerHTML = '';
         var time_before_whisper_api = new Date().getTime();
         setTimeout(() => {
             if (document.querySelector("div.api_status").innerHTML === `Waiting for response...`) 
@@ -64,7 +71,6 @@ async function start_recording() {
         var result = await whisper_api(file);
         if (new Date().getTime() - time_before_whisper_api < 8000) {
             if (result.text) {
-                document.querySelector("div.api_status").innerHTML = ``;
                 document.querySelector("textarea.record_script").value = result.text;
                 messages.send_chatgpt(result.text, document.querySelector("#default_model").value);
             }
