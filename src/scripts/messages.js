@@ -1,11 +1,11 @@
-import { chatgpt_api, language_dict } from "./common.js";
+import { chatgpt_api, language_dict, textContents, user_lang } from "./common.js";
 
 export class Messages{
     constructor() {
     }
 
     async send_chatgpt(content, model) {
-        document.querySelector("div.api_status").innerHTML = `Waiting for response...`;
+        document.querySelector("div.api_status").innerHTML = `${textContents[user_lang]["waiting"]}...`;
         document.querySelector("#translate_result").innerHTML = '';
         document.querySelector("#pronunciation").innerHTML = '';
 

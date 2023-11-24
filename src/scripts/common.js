@@ -1,10 +1,17 @@
 import {Messages} from "./messages.js";
 import {AnswerStream} from "./answer_stream.js";
 
-export {whisper_api, chatgpt_api, answer_stream, messages, language_dict};
+export {whisper_api, chatgpt_api, answer_stream, messages, language_dict, textContents, user_lang};
 
 var answer_stream = new AnswerStream();
 var messages = new Messages();
+
+const user_lang = navigator.language || navigator.userLanguage;
+
+const textContents = {
+    "en": {"auto": "Auto", "save": "Save", "regenerate": "Regenerate", "api_key": "OpenAI API key", "keep_pushing": "Keep pushing to record", "generating": "Generating", "recording": "Recording", "waiting": "Waiting for response", "timeout": "Timeout! Try it again.", "no_message": "No messages. Check mic setup."},
+    "ko": {"auto": "자동", "save": "저장", "regenerate": "결과 재생성", "api_key": "OpenAI API 키", "keep_pushing": "눌러서 녹음하기", "generating": "결과 생성 중", "recording": "녹음 중", "waiting": "응답 대기 중", "timeout": "응답이 없습니다. 다시 시도하세요.", "no_message": "녹음되지 않았습니다. 마이크를 확인하세요."},
+};
 
 const language_dict = {
     "sq": {"English": "Albanian", "Native": "Shqip"},
@@ -85,8 +92,7 @@ async function whisper_api(file) {
 }
 
 async function chatgpt_api(messages, model) {
-    document.querySelector("#gpt3_5").disabled = true;
-    document.querySelector("#gpt4").disabled = true;
+    document.querySelector("div.regenerate-buttons").style.display = ``;
 
     const api_url = "https://api.openai.com/v1/chat/completions";
     const param = {
@@ -110,8 +116,7 @@ async function chatgpt_api(messages, model) {
             buffer = messages.pop();
             if (messages.length === 0) {
                 answer_stream.end();
-                document.querySelector("#gpt3_5").disabled = false;
-                document.querySelector("#gpt4").disabled = false;
+                document.querySelector("div.regenerate-buttons").style.display = `flex`;
                 return answer_stream.now_answer;
             }
 

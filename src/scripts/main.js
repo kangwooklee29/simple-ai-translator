@@ -1,7 +1,8 @@
-import {whisper_api, messages, language_dict} from './common.js';
+import {whisper_api, messages, language_dict, textContents, user_lang} from './common.js';
 
 let mediaRecorder = null, chunks = [];
 let recordTimer = null, timerTime = 0;
+let start_recording_indicator = false;
 
 async function run_tts() {
     const selection = window.getSelection();
@@ -42,11 +43,14 @@ async function start_recording() {
     if (mediaRecorder && mediaRecorder.state === "recording") return;
     document.querySelector("div.record_button button").classList.add("pushing");
 
+    start_recording_indicator = true;
+    document.querySelector("div.api_status").innerHTML = `${textContents[user_lang]["waiting"]}...`;
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    start_recording_indicator = false;
 
     timerTime = Date.now();
     recordTimer = setInterval(() => {
-        document.querySelector("div.api_status").innerHTML = `Recording... ${new Date(Date.now() - timerTime).toISOString().substr(14, 5)}`;
+        document.querySelector("div.api_status").innerHTML = `${textContents[user_lang]["recording"]}... ${new Date(Date.now() - timerTime).toISOString().substr(14, 5)}`;
     }, 1000);
 
     mediaRecorder = new MediaRecorder(stream, {type: 'audio/webm'});
@@ -60,13 +64,13 @@ async function start_recording() {
         stream.getTracks().forEach(track => track.stop());
 
         clearInterval(recordTimer);
-        document.querySelector("div.api_status").innerHTML = `Waiting for response...`;
+        document.querySelector("div.api_status").innerHTML = `${textContents[user_lang]["waiting"]}...`;
         document.querySelector("#translate_result").innerHTML = '';
         document.querySelector("#pronunciation").innerHTML = '';
         var time_before_whisper_api = new Date().getTime();
         setTimeout(() => {
-            if (document.querySelector("div.api_status").innerHTML === `Waiting for response...`) 
-                document.querySelector("div.api_status").innerHTML = `Timeout! Try it again.`;
+            if (document.querySelector("div.api_status").innerHTML === `${textContents[user_lang]["waiting"]}...`) 
+                document.querySelector("div.api_status").innerHTML = `${textContents[user_lang]["timeout"]}`;
         }, 8000);
         var result = await whisper_api(file);
         if (new Date().getTime() - time_before_whisper_api < 8000) {
@@ -75,7 +79,7 @@ async function start_recording() {
                 messages.send_chatgpt(result.text, document.querySelector("#default_model").value);
             }
             else
-                document.querySelector("div.api_status").innerHTML = `No messages. Check mic setup.`;
+                document.querySelector("div.api_status").innerHTML = `${textContents[user_lang]["no_message"]}`;
         }
     };
 
@@ -85,7 +89,7 @@ async function start_recording() {
 document.querySelector("div.record_button > button").addEventListener("touchstart", () => start_recording());
 
 document.body.addEventListener("touchend", () => {
-    if (mediaRecorder) {
+    if (mediaRecorder && !start_recording_indicator) {
         document.querySelector("div.record_button button").classList.remove("pushing");
         mediaRecorder.stop();
     }
@@ -94,7 +98,7 @@ document.body.addEventListener("touchend", () => {
 document.querySelector("div.record_button > button").addEventListener("mousedown", () => start_recording());
 
 document.body.addEventListener("mouseup", () => {
-    if (mediaRecorder) {
+    if (mediaRecorder && !start_recording_indicator) {
         document.querySelector("div.record_button button").classList.remove("pushing");
         mediaRecorder.stop();
     }
@@ -174,4 +178,8 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector("div.API_KEY input").value = API_KEY;
     else
         document.querySelector("#options").style.display = 'block';
+
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        element.textContent = textContents[user_lang][element.getAttribute('data-i18n')];
+    });
 });

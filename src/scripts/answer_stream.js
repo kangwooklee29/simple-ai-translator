@@ -1,3 +1,5 @@
+import {textContents, user_lang} from "./common.js";
+
 export class AnswerStream {
     constructor() {
         this.now_streaming = false;
@@ -16,7 +18,7 @@ export class AnswerStream {
             this.mode_history = new Set();
             this.current_mode = "";
             this.now_streaming = true;
-            document.querySelector("div.api_status").innerHTML = `Generating...`;
+            document.querySelector("div.api_status").innerHTML = `${textContents[user_lang]["generating"]}...`;
         }
     }
 
