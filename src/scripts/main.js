@@ -1,52 +1,17 @@
-import {whisper_api, messages, language_dict, textContents, user_lang} from './common.js';
+import {whisper_api, messages, language_dict, textContents, user_lang, run_tts} from './common.js';
 
 let mediaRecorder = null, chunks = [];
 let recordTimer = null, timerTime = 0;
 let start_recording_indicator = false;
-
-async function run_tts() {
-    const selection = window.getSelection();
-    let target_text = document.querySelector("#translate_result").textContent;
-    if (selection) {
-        const selection_str = selection.toString();
-        if (selection_str && target_text.includes(selection_str))
-            target_text = selection_str;
-    }
-
-    let blob_url = localStorage.getItem(target_text);
-    if (!blob_url) {
-        const response = await fetch('https://api.openai.com/v1/audio/speech', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem("API_KEY")}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                model: 'tts-1',
-                input: target_text,
-                voice: 'alloy'
-            })
-        });
-
-        blob_url = URL.createObjectURL(await response.blob());
-        localStorage.setItem(target_text, blob_url);
-    }
-
-    const audio = new Audio(blob_url);
-    audio.play();
-    audio.addEventListener('ended', () => {
-        document.querySelector("#tts").disabled = false;
-    });    
-}
+let typingTimer = null;
 
 async function start_recording() {
     if (mediaRecorder && mediaRecorder.state === "recording") return;
     document.querySelector("div.record_button button").classList.add("pushing");
 
-    start_recording_indicator = true;
+    start_recording_indicator = new Date().getTime();
     document.querySelector("div.api_status").innerHTML = `${textContents[user_lang]["waiting"]}...`;
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    start_recording_indicator = false;
 
     timerTime = Date.now();
     recordTimer = setInterval(() => {
@@ -62,46 +27,54 @@ async function start_recording() {
         chunks = [];
         mediaRecorder = null;
         stream.getTracks().forEach(track => track.stop());
-
         clearInterval(recordTimer);
         document.querySelector("div.api_status").innerHTML = `${textContents[user_lang]["waiting"]}...`;
         document.querySelector("#translate_result").innerHTML = '';
         document.querySelector("#pronunciation").innerHTML = '';
-        var time_before_whisper_api = new Date().getTime();
-        setTimeout(() => {
-            if (document.querySelector("div.api_status").innerHTML === `${textContents[user_lang]["waiting"]}...`) 
-                document.querySelector("div.api_status").innerHTML = `${textContents[user_lang]["timeout"]}`;
-        }, 8000);
+        document.querySelector("#verify_result").innerHTML = '';
         var result = await whisper_api(file);
-        if (new Date().getTime() - time_before_whisper_api < 8000) {
-            if (result.text) {
-                document.querySelector("textarea.record_script").value = result.text;
-                messages.send_chatgpt(result.text, document.querySelector("#default_model").value);
-            }
-            else
-                document.querySelector("div.api_status").innerHTML = `${textContents[user_lang]["no_message"]}`;
+        if (result.text) {
+            document.querySelector("textarea.record_script").value = result.text;
+            messages.send_chatgpt(result.text, document.querySelector("#default_model").value);
         }
+        else
+            document.querySelector("div.api_status").innerHTML = `${textContents[user_lang]["no_message"]}`;
     };
 
+    mediaRecorder.onstart = () => {
+        start_recording_indicator = false;
+    };
     mediaRecorder.start();
 }
 
 document.querySelector("div.record_button > button").addEventListener("touchstart", () => start_recording());
 
 document.body.addEventListener("touchend", () => {
-    if (mediaRecorder && !start_recording_indicator) {
+    let registerRecordingStopper = setInterval(() => {
+        if (!mediaRecorder || start_recording_indicator) {
+            if (new Date().getTime() - start_recording_indicator > 8000)
+                clearInterval(registerRecordingStopper);
+            return;
+        }
         document.querySelector("div.record_button button").classList.remove("pushing");
         mediaRecorder.stop();
-    }
+        clearInterval(registerRecordingStopper);
+    }, 200);
 });
 
 document.querySelector("div.record_button > button").addEventListener("mousedown", () => start_recording());
 
 document.body.addEventListener("mouseup", () => {
-    if (mediaRecorder && !start_recording_indicator) {
+    let registerRecordingStopper = setInterval(() => {
+        if (!mediaRecorder || start_recording_indicator) {
+            if (new Date().getTime() - start_recording_indicator > 8000)
+                clearInterval(registerRecordingStopper);
+            return;
+        }
         document.querySelector("div.record_button button").classList.remove("pushing");
         mediaRecorder.stop();
-    }
+        clearInterval(registerRecordingStopper);
+    }, 200);
 });
 
 document.querySelector("div.lang_select img").addEventListener("click", () => {
@@ -114,14 +87,28 @@ document.querySelector("div.lang_select img").addEventListener("click", () => {
     localStorage.setItem("source_language", prev_target);
     localStorage.setItem("target_language", prev_source);
 
-    document.querySelector("textarea.record-script").value = document.querySelector("#translate_result").textContent;
+    document.querySelector("textarea.record_script").value = document.querySelector("#translate_result").textContent;
     document.querySelector("#translate_result").innerHTML = '';
     document.querySelector("#pronunciation").innerHTML = '';
+    document.querySelector("#verify_result").innerHTML = '';
+    document.querySelector("div.verify-button").style.display = '';
+});
+
+document.querySelector("#verify").addEventListener("click", () => {
+    document.querySelector("div.verify-button").style.display = '';
+    document.querySelector("div.regenerate-buttons").style.display = '';
+    messages.send_chatgpt(document.querySelector("#translate_result").textContent, document.querySelector("#default_model").value, true);
+});
+
+document.querySelector("textarea.record_script").addEventListener("input", e => {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout( () => {
+        messages.send_chatgpt(e.target.value, document.querySelector("#default_model").value);
+    }, 3000);
 });
 
 document.querySelector("div.result_buttons").addEventListener("click", e => {
     if (document.querySelector("#tts").contains(e.target) && !document.querySelector("#tts").disabled) {
-        document.querySelector("#tts").disabled = true;
         run_tts();
     }
 
@@ -148,6 +135,7 @@ document.querySelector("#options").addEventListener("click", e => {
 
 document.querySelector("#source_language").addEventListener("change", e => localStorage.setItem("source_language", e.target.value));
 document.querySelector("#target_language").addEventListener("change", e => localStorage.setItem("target_language", e.target.value));
+document.querySelector("#check_tts").addEventListener("change", e => localStorage.setItem("check_tts", e.target.checked));
 
 document.addEventListener("DOMContentLoaded", () => {
     const source_lang_element = document.getElementById('source_language');
@@ -178,6 +166,12 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector("div.API_KEY input").value = API_KEY;
     else
         document.querySelector("#options").style.display = 'block';
+
+    const check_tts = JSON.parse(localStorage.getItem("check_tts"));
+    if (check_tts === null)
+        localStorage.setItem("check_tts", true);
+    else if (!check_tts)
+        document.querySelector("#check_tts").checked = false;
 
     document.querySelectorAll('[data-i18n]').forEach(element => {
         element.textContent = textContents[user_lang][element.getAttribute('data-i18n')];

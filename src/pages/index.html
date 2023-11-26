@@ -26,9 +26,13 @@
         </select>  
       </div>
       <div class="answer_wrapper">
-        <div class="answer"><span id="translate_result"></span> <span id="pronunciation"></span></div>
+        <div class="answer"><span id="translate_result"></span> <span id="pronunciation"></span> <span id="verify_result"></span></div>
         <div class="result_buttons">
           <button id="tts"><img src="../assets/img/Speaker_Icon.svg"></button>
+          <input type="checkbox" id="check_tts" checked>
+          <div class="verify-button">
+            <button id="verify" data-i18n="verify">Verify</button>
+          </div>
           <div class="regenerate-buttons">
             <span data-i18n="regenerate">Regenerate</span>
             <button id="gpt3_5">GPT-3.5</button>

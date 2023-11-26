@@ -67,6 +67,11 @@ div.record_button > button.pushing {
     width: 24px;
 }
 
+#check_tts {
+    position: absolute;
+    left: 50px;
+}
+
 #tts img {
     top: 1px;
     width: 14px;
@@ -229,7 +234,7 @@ h1 {
     left: 10px;
 }
 
-div.regenerate-buttons {
+div.regenerate-buttons, div.verify-button {
     justify-content: flex-end;
     position: absolute;
     right: 20px;
