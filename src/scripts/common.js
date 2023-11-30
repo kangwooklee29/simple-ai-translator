@@ -159,7 +159,7 @@ async function run_tts() {
             target_text = selection_str;
     }
 
-    let blob_url = localStorage.getItem(target_text);
+    let blob_url = sessionStorage.getItem(target_text);
     if (!blob_url) {
         const response = await fetch('https://api.openai.com/v1/audio/speech', {
             method: 'POST',
@@ -175,7 +175,7 @@ async function run_tts() {
         });
 
         blob_url = URL.createObjectURL(await response.blob());
-        localStorage.setItem(target_text, blob_url);
+        sessionStorage.setItem(target_text, blob_url);
     }
 
     const audio = new Audio(blob_url);
