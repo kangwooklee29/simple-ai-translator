@@ -91,12 +91,12 @@ document.querySelector("div.lang_select img").addEventListener("click", () => {
     document.querySelector("#translate_result").innerHTML = '';
     document.querySelector("#pronunciation").innerHTML = '';
     document.querySelector("#verify_result").innerHTML = '';
-    document.querySelector("div.verify-button").style.display = '';
+    document.querySelector("div.regenerate-buttons").style.display = '';
+    document.querySelector("#verify").style.display = '';
 });
 
 document.querySelector("#verify").addEventListener("click", () => {
-    document.querySelector("div.verify-button").style.display = '';
-    document.querySelector("div.regenerate-buttons").style.display = '';
+    document.querySelector("#verify").style.display = 'none';
     messages.send_chatgpt(document.querySelector("#translate_result").textContent, document.querySelector("#default_model").value, true);
 });
 
@@ -112,9 +112,6 @@ document.querySelector("div.result_buttons").addEventListener("click", e => {
         run_tts();
     }
 
-    if (e.target.id === "gpt3_5")
-        messages.send_chatgpt(document.querySelector("textarea.record_script").value, "gpt-3.5-turbo-1106");
-
     if (e.target.id === "gpt4")
         messages.send_chatgpt(document.querySelector("textarea.record_script").value, "gpt-4-1106-preview");
 });
@@ -126,6 +123,8 @@ document.querySelector("div.title button").addEventListener("click", () => {
 document.querySelector("#options").addEventListener("click", e => {
     if (e.target === document.querySelector("div.API_KEY button"))
         localStorage.setItem("API_KEY", document.querySelector("#api_key").value);
+    if (e.target === document.querySelector("div.GOOGLE_API_KEY button"))
+        localStorage.setItem("GOOGLE_API_KEY", document.querySelector("#google_api_key").value);
 
     if (e.target.classList.contains("options-close")) {
         if (localStorage.getItem("API_KEY"))
@@ -136,6 +135,7 @@ document.querySelector("#options").addEventListener("click", e => {
 document.querySelector("#source_language").addEventListener("change", e => localStorage.setItem("source_language", e.target.value));
 document.querySelector("#target_language").addEventListener("change", e => localStorage.setItem("target_language", e.target.value));
 document.querySelector("#check_tts").addEventListener("change", e => localStorage.setItem("check_tts", e.target.checked));
+document.querySelector("#use_google_tts").addEventListener("change", e => localStorage.setItem("use_google_tts", e.target.checked));
 
 document.addEventListener("DOMContentLoaded", () => {
     const source_lang_element = document.getElementById('source_language');
@@ -162,8 +162,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#target_language").value = target_language ? target_language : "en";
 
     const API_KEY = localStorage.getItem("API_KEY");
-    if (API_KEY)
+    if (API_KEY) {
         document.querySelector("div.API_KEY input").value = API_KEY;
+        document.querySelector("div.GOOGLE_API_KEY input").value = localStorage.getItem("GOOGLE_API_KEY");
+        document.querySelector("#use_google_tts").checked = JSON.parse(localStorage.getItem("use_google_tts"));
+    }
     else
         document.querySelector("#options").style.display = 'block';
 

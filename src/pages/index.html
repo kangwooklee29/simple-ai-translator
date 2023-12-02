@@ -30,13 +30,9 @@
         <div class="result_buttons">
           <button id="tts"><img src="../assets/img/Speaker_Icon.svg"></button>
           <input type="checkbox" id="check_tts" checked>
-          <div class="verify-button">
-            <button id="verify" data-i18n="verify">Verify</button>
-          </div>
           <div class="regenerate-buttons">
-            <span data-i18n="regenerate">Regenerate</span>
-            <button id="gpt3_5">GPT-3.5</button>
-            <button id="gpt4">GPT-4</button>
+            <button id="verify" data-i18n="verify">Verify</button>
+            <button id="gpt4" data-i18n="regenerate">Regenerate</button>
           </div>
         </div>
       </div>
@@ -46,6 +42,14 @@
           <label for="api_key" data-i18n="api_key">OpenAI API key</label>
           <item>
               <div><input type="text" id="api_key"></div>
+              <div><button data-i18n="save">SAVE</button></div>
+          </item>
+        </div>
+        <div class="GOOGLE_API_KEY">
+          <label for="google_api_key" data-i18n="google_api_key">Google API key</label>
+          <item>
+              <div><input type="text" id="google_api_key"></div>
+              <div><input type="checkbox" id="use_google_tts"></div>
               <div><button data-i18n="save">SAVE</button></div>
           </item>
         </div>

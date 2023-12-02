@@ -78,7 +78,7 @@ div.record_button > button.pushing {
     position: relative;
 }
 
-div.API_KEY {
+div.API_KEY, div.GOOGLE_API_KEY {
     margin-top: 100px;
 }
 
@@ -234,7 +234,7 @@ h1 {
     left: 10px;
 }
 
-div.regenerate-buttons, div.verify-button {
+div.regenerate-buttons {
     justify-content: flex-end;
     position: absolute;
     right: 20px;
