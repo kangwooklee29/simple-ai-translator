@@ -113,7 +113,7 @@ document.querySelector("div.result_buttons").addEventListener("click", e => {
     }
 
     if (e.target.id === "gpt4")
-        messages.send_chatgpt(document.querySelector("textarea.record_script").value, "gpt-4-1106-preview");
+        messages.send_chatgpt(document.querySelector("textarea.record_script").value, "gpt-4o");
 });
 
 document.querySelector("div.title button").addEventListener("click", () => {
